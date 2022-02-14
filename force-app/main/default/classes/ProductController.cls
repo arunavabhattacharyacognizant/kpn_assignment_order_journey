@@ -73,26 +73,26 @@ public with sharing class ProductController {
         return [SELECT PricebookEntryId, Quantity FROM OrderItem WHERE OrderId =: OrderId WITH SECURITY_ENFORCED];
     }
 
-    public class AvailableProduct implements Comparable {
-        @AuraEnabled public PricebookEntry pricebookEntry;
-        @AuraEnabled public Integer productQuantityInOrder;
-        public AvailableProduct(Integer productQuantityInOrder, PricebookEntry pricebookEntry) {
-            this.pricebookEntry = pricebookEntry;
-            this.productQuantityInOrder = productQuantityInOrder;
-        }
-        public Integer compareTo(Object compareTo) {
-            AvailableProduct compareToPbEntry = (AvailableProduct) compareTo;
-            Integer value = 0;
-            if (productQuantityInOrder > compareToPbEntry.productQuantityInOrder) {
-                value = -1;
-            } else if (productQuantityInOrder < compareToPbEntry.productQuantityInOrder) {
-                value = 1;
-            } else if (productQuantityInOrder == null && compareToPbEntry.productQuantityInOrder != null) {
-                value = 1;
-            } else if (productQuantityInOrder != null && compareToPbEntry.productQuantityInOrder == null) {
-                value = -1;
-            }
-            return value;
-        }
-    }
+    public class AvailableProduct implements Comparable{
+		@AuraEnabled public PricebookEntry pricebookEntry;
+		@AuraEnabled public Integer productQuantityInOrder;
+		public AvailableProduct(Integer productQuantityInOrder, PricebookEntry pricebookEntry){
+			this.pricebookEntry = pricebookEntry;
+			this.productQuantityInOrder = productQuantityInOrder;
+		}
+		public Integer compareTo(Object compareTo){
+			AvailableProduct compareToPricebookEntry = (AvailableProduct)compareTo;
+			Integer value = 0;
+			if(productQuantityInOrder > compareToPricebookEntry.productQuantityInOrder){
+				value = -1;
+			}else if(productQuantityInOrder < compareToPricebookEntry.productQuantityInOrder){
+				value = 1;
+			}else if(productQuantityInOrder == null && compareToPricebookEntry.productQuantityInOrder != null){
+				value = 1;
+			}else if(productQuantityInOrder != null && compareToPricebookEntry.productQuantityInOrder == null){
+				value = -1;
+			}
+			return value;
+		}
+	}
 }

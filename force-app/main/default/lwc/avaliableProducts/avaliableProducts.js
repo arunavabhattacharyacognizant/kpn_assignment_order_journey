@@ -1,9 +1,10 @@
 import { LightningElement, api, wire, track } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
-import ERROR_PRODUCT_ADDITION_MIN_REQ from '@salesforce/label/c.ERROR_PRODUCT_ADDITION_MIN_REQ';
+import KPN_ORDERS_SELECT_ONE_PRODUCT from '@salesforce/label/c.KPN_ORDERS_SELECT_ONE_PRODUCT';
 import getAvailableProducts from '@salesforce/apex/ProductController.getProducts';
 import addProductsToOrder from '@salesforce/apex/ProductController.addToOrder';
 import { getRecord } from 'lightning/uiRecordApi';
+/** To send the event accross de page */
 import { publish, MessageContext } from 'lightning/messageService';
 import orderItemsAddedEvent from '@salesforce/messageChannel/orderItemsAddedEvent__c';
 
@@ -30,7 +31,7 @@ const columns = [
 export default class AvailableProductsController extends LightningElement {
 	/** Custom Labels */
 		labels = {
-			ERROR_PRODUCT_ADDITION_MIN_REQ
+			KPN_ORDERS_SELECT_ONE_PRODUCT
 		}
 	/** View controller attributes */
 		orderStatus = 'Draft';
@@ -64,12 +65,12 @@ export default class AvailableProductsController extends LightningElement {
 		wiredProject({error, data}){
 			if (data) {
 				if(data.length > 0){
-					data.forEach((availableProducts, idx) => {
+					data.forEach((sortedData, idx) => {
 						let dataToTable = {};
-						dataToTable.Id = availableProducts.availableProduct.Id;
-						dataToTable.Name = availableProducts.availableProduct.Product2.Name;
-						dataToTable.UnitPrice = availableProducts.availableProduct.UnitPrice;
-						dataToTable.Link = '/' + availableProducts.availableProduct.Id;
+						dataToTable.Id = sortedData.pricebookEntry.Id;
+						dataToTable.Name = sortedData.pricebookEntry.Product2.Name;
+						dataToTable.UnitPrice = sortedData.pricebookEntry.UnitPrice;
+						dataToTable.Link = '/' + sortedData.pricebookEntry.Id;
 						this.dataTable.push(dataToTable);
 						if(idx < this.initialOffset){
 							this.initialData.push(dataToTable);
@@ -132,7 +133,7 @@ export default class AvailableProductsController extends LightningElement {
 			let selectedProducts = this.selectedRows;
 			let pbList = [];
 			if(selectedProducts.length == 0){
-				this.sendMessageToUser('warning', this.labels.ERROR_PRODUCT_ADDITION_MIN_REQ);
+				this.sendMessageToUser('warning', this.labels.KPN_ORDERS_SELECT_ONE_PRODUCT);
 			}else{
 				selectedProducts.forEach(selectedProduct => {
 					let pbEntryToAdd = { 'sobjectType': 'PricebookEntry' };
