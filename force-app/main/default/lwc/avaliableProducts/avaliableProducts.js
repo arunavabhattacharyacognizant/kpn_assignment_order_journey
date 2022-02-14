@@ -1,8 +1,8 @@
 import { LightningElement, api, wire, track } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import ERROR_PRODUCT_ADDITION_MIN_REQ from '@salesforce/label/c.ERROR_PRODUCT_ADDITION_MIN_REQ';
-import getProducts from '@salesforce/apex/ProductController.getProducts';
-import addToOrder from '@salesforce/apex/ProductController.addToOrder';
+import getAvailableProducts from '@salesforce/apex/ProductController.getProducts';
+import addProductsToOrder from '@salesforce/apex/ProductController.addToOrder';
 import { getRecord } from 'lightning/uiRecordApi';
 import { publish, MessageContext } from 'lightning/messageService';
 import orderItemsAddedEvent from '@salesforce/messageChannel/orderItemsAddedEvent__c';
@@ -34,7 +34,7 @@ export default class AvailableProductsController extends LightningElement {
 		}
 	/** View controller attributes */
 		orderStatus = 'Draft';
-		orderActivated = false;
+		areDetailsVisible = false;
 		hideCheckboxColums = false;
 	/** dataTable controller attributes */
 		columns = columns;
@@ -60,16 +60,16 @@ export default class AvailableProductsController extends LightningElement {
 			}
 		}
 	/** to get the product entries associated to the order */
-		@wire(getProducts, {OrderId : '$recordId'})
+		@wire(getAvailableProducts, {OrderId : '$recordId'})
 		wiredProject({error, data}){
 			if (data) {
 				if(data.length > 0){
-					data.forEach((sortedData, idx) => {
+					data.forEach((availableProducts, idx) => {
 						let dataToTable = {};
-						dataToTable.Id = sortedData.pbEntry.Id;
-						dataToTable.Name = sortedData.pbEntry.Product2.Name;
-						dataToTable.UnitPrice = sortedData.pbEntry.UnitPrice;
-						dataToTable.Link = '/' + sortedData.pbEntry.Id;
+						dataToTable.Id = availableProducts.availableProduct.Id;
+						dataToTable.Name = availableProducts.availableProduct.Product2.Name;
+						dataToTable.UnitPrice = availableProducts.availableProduct.UnitPrice;
+						dataToTable.Link = '/' + availableProducts.availableProduct.Id;
 						this.dataTable.push(dataToTable);
 						if(idx < this.initialOffset){
 							this.initialData.push(dataToTable);
@@ -80,7 +80,7 @@ export default class AvailableProductsController extends LightningElement {
 				console.log(error);
 			}
 			if(this.dataTable.length > 0){
-				this.orderActivated = true;
+				this.areDetailsVisible = true;
 			}
 		}
 	/** to control datatable behavior */
@@ -127,20 +127,20 @@ export default class AvailableProductsController extends LightningElement {
 			this.selectedRows = event.detail.selectedRows;
 		}
 	/** method to invoke Apex update method */
-		addProductsToOrder(){
-			let orderId = this.recordId;
+		addProducts(){
+			let OrderId = this.recordId;
 			let selectedProducts = this.selectedRows;
-			let pricebookEntries = [];
+			let pbList = [];
 			if(selectedProducts.length == 0){
 				this.sendMessageToUser('warning', this.labels.ERROR_PRODUCT_ADDITION_MIN_REQ);
 			}else{
 				selectedProducts.forEach(selectedProduct => {
-					let pricebookEntry = { 'sobjectType': 'PricebookEntry' };
-					pricebookEntry.Id = selectedProduct.Id;
-					pricebookEntry.UnitPrice = selectedProduct.UnitPrice;
-					pricebookEntries.push(pricebookEntry);
+					let pbEntryToAdd = { 'sobjectType': 'PricebookEntry' };
+					pbEntryToAdd.Id = selectedProduct.Id;
+					pbEntryToAdd.UnitPrice = selectedProduct.UnitPrice;
+					pbList.push(pbEntryToAdd);
 				});
-				addToOrder({pricebookEntries: pricebookEntries, OrderId: orderId})
+				addProductsToOrder({pbList: pbList, OrderId: OrderId})
 					.then(result => {
 						this.sendMessageToUser(result.status, result.message);
 						publish(this.messageContext, orderItemsAddedEvent);

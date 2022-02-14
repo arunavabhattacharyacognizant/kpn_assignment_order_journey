@@ -39,7 +39,7 @@ public with sharing class ProductController {
     }
 
     @AuraEnabled
-    public static void addToCart(List < PricebookEntry > pricebookEntries, Id OrderId) {
+    public static void addToOrder(List < PricebookEntry > pricebookEntries, Id OrderId) {
         try {
             List < OrderItem > newOrderItems = new List < OrderItem > ();
             List < OrderItem > existingOrderItems = getOrderItems(OrderId);
