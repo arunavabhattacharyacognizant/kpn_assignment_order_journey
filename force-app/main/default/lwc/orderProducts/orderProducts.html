@@ -1,0 +1,48 @@
+<!--
+  @description       : dataTable to show orderItems an update
+						the info inmediatly.
+  @author            : jefryruiz@gmail.com
+  @group             :
+  @last modified on  : 04-26-2021
+  @last modified by  : jefryruiz@gmail.com
+  Modifications Log
+  Ver   Date         Author                Modification
+  1.0   04-26-2021   jefryruiz@gmail.com   Initial Version
+-->
+<template>
+	<lightning-card icon-name="standard:order_item" title="Order Products">
+		<div slot="actions">
+			<div slot="footer">
+				<lightning-button
+					disabled={activatingOrder}
+					label="Activate Order"
+					variant="success"
+					icon-name="utility:check"
+					title="Activate Order"
+					onclick={activateOrder}
+					class="slds-m-left_x-small">
+				</lightning-button>
+			</div>
+		</div>
+		<div class="table-container">
+			<template if:true={areDetailsVisible}>
+				<lightning-datatable
+					key-field="Id"
+					enable-infinite-loading="true"
+					hide-checkbox-column
+					load-more-offset={initialOffset}
+					onloadmore={loadMoreProducts}
+					columns={columns}
+					data={initialData}
+					default-sort-direction={defaultSortDirection}
+					sorted-direction={sortDirection}
+					sorted-by={sortedBy}
+					onsort={sortTable}>
+				</lightning-datatable>
+			</template>
+			<template if:false={areDetailsVisible}>
+				<lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+			</template>
+		</div>
+	</lightning-card>
+</template>

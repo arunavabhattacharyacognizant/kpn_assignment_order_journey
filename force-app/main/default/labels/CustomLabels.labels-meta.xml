@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomLabels xmlns="http://soap.sforce.com/2006/04/metadata">
+    <labels>
+        <fullName>ERROR_SUBMIT_ORDER</fullName>
+        <categories>ERROR</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ERROR_ACTIVATE_ORDER</shortDescription>
+        <value>Order Submission and Activation Failed</value>
+    </labels>
+    <labels>
+        <fullName>SUCCESS_SUBMIT_ORDER</fullName>
+        <categories>SUCCESS</categories>
+        <language>en_US</language>
+        <protected>false</protected>
+        <shortDescription>SUCCESS_SUBMIT_ORDER</shortDescription>
+        <value>Order Submitted and Activated Successfully</value>
+    </labels>
+    <labels>
+        <fullName>SUCCESS_PRODUCT_ADDITION</fullName>
+        <categories>SUCCESS</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>SUCCESS_PRODUCT_ADDITION</shortDescription>
+        <value>Selected product(s) added successfully to Order</value>
+    </labels>
+    <labels>
+        <fullName>ERROR_PRODUCT_ADDITION_MIN_REQ</fullName>
+        <categories>ERROR</categories>
+        <language>en_US</language>
+        <protected>true</protected>
+        <shortDescription>ERROR_PRODUCT_ADDITION_MIN_REQ</shortDescription>
+        <value>Please select at least one product to add</value>
+    </labels>
+</CustomLabels>
