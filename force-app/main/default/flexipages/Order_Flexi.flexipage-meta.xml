@@ -32,6 +32,7 @@
                     <value>3</value>
                 </componentInstanceProperties>
                 <componentName>force:highlightsPanel</componentName>
+                <identifier>force_highlightsPanel</identifier>
             </componentInstance>
         </itemInstances>
         <name>header</name>
@@ -41,6 +42,7 @@
         <itemInstances>
             <componentInstance>
                 <componentName>avaliableProducts</componentName>
+                <identifier>c_avaliableProducts1</identifier>
             </componentInstance>
         </itemInstances>
         <name>leftcol</name>
@@ -50,6 +52,7 @@
         <itemInstances>
             <componentInstance>
                 <componentName>orderProducts</componentName>
+                <identifier>c_orderProducts1</identifier>
             </componentInstance>
         </itemInstances>
         <name>rightcol</name>
