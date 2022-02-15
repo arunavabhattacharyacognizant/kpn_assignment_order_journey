@@ -8,8 +8,14 @@
  **/
 
 public virtual class LWCResponse {
-    @AuraEnabled 
-    public String status {get; set;}
-	@AuraEnabled 
-    public String message {get; set;}
+    @AuraEnabled
+    public String status {
+        get;
+        set;
+    }
+    @AuraEnabled
+    public String message {
+        get;
+        set;
+    }
 }
