@@ -1,21 +1,19 @@
 /**
- * @description       : Class for capturing status and messages
+ * @description       : To create test data for contact, oppty etc.
  * @author            : Arunava(Cognizant)
  * 
  * Modifications Log
  * Ver   Date         Author                Modification
- * 1.0   02-10-2022   Arunava(Cognizant)   Initial Version
+ * 1.0   02-15-2022   Arunava(Cognizant)   Initial Version
  **/
  
 @IsTest
-public class testDataBuilder{
+public class TestDataBuilder{
 	private static final Map<String, Schema.RecordTypeInfo> OPP_RT2INFO = Schema.SObjectType.Opportunity.getRecordTypeInfosByDeveloperName();
 	private static final Map<String, Schema.RecordTypeInfo> PROD_RT2INFO = Schema.SObjectType.Product2.getRecordTypeInfosByDeveloperName();
-	/**
-	 * @description Contact Builder
-	*/
+
 	public class ContactBuilder{
-		private Contact obj = new Contact(LastName = 'STRING');
+		private Contact obj = new Contact(LastName = 'KPNTESTCONTACT');
 		public ContactBuilder withLastName(String value){
 			obj.LastName = value;
 			return this;
@@ -53,11 +51,9 @@ public class testDataBuilder{
 	public static ContactBuilder aContact(){
 		return new ContactBuilder();
 	}
-	/**
-	 * @description Opportunity Builder
-	*/
+
 	public class OpportunityBuilder{
-		Opportunity opp = new Opportunity(Name = 'Test', StageName = 'Test Stage', CloseDate = Date.today());
+		Opportunity opp = new Opportunity(Name = 'KPNTEST', StageName = 'SYSTEMTEST', CloseDate = Date.today());
 		public OpportunityBuilder withName(String name){
 			opp.Name = name;
 			return this;
@@ -94,9 +90,7 @@ public class testDataBuilder{
 	public static OpportunityBuilder aOpportunity(){
 		return new OpportunityBuilder();
 	}
-	/**
-	 * @description OpportunityLineItem Builder
-	*/
+
 	public class OpportunityLineItemsBuilder{
 		OpportunityLineItem OLI = new OpportunityLineItem(Quantity = 1, UnitPrice = 1);
 		public OpportunityLineItemsBuilder withOpp(Opportunity opp){
@@ -138,9 +132,7 @@ public class testDataBuilder{
 	public static OpportunityLineItemsBuilder aOLI(){
 		return new OpportunityLineItemsBuilder();
 	}
-	/**
-	 * @description Account Builder
-	*/
+
 	public class AccountBuilder{
 		Account Acc = new Account();
 		public AccountBuilder withName(String name){
@@ -158,9 +150,7 @@ public class testDataBuilder{
 	public static AccountBuilder anAccount(){
 		return new AccountBuilder();
 	}
-	/**
-	 * @description User Builder
-	*/
+
 	public class UserBuilder{
 		User Us = new User();
 		public UserBuilder withUserName(String name){
@@ -210,9 +200,7 @@ public class testDataBuilder{
 	public static UserBuilder aUser(){
 		return new UserBuilder();
 	}
-	/**
-	 * @description Pricebook Builder
-	*/
+
 	public class Pricebook2Builder{
 		Pricebook2 pricebook = new Pricebook2();
 		public Pricebook2Builder withName(String name){
@@ -226,9 +214,7 @@ public class testDataBuilder{
 	public static Pricebook2Builder aPricebook2(){
 		return new Pricebook2Builder();
 	}
-	/**
-	 * @description Pricebook Entry Builder
-	*/
+
 	public class PricebookEntryBuilder{
 		PricebookEntry pricebook = new PricebookEntry(
 			Pricebook2Id = Test.getStandardPricebookId(),
@@ -261,9 +247,7 @@ public class testDataBuilder{
 	public static PricebookEntryBuilder aPricebookEntry(){
 		return new PricebookEntryBuilder();
 	}
-	/**
-	 * @description Product Builder
-	*/
+
 	public class Product2Builder{
 		Product2 product = new Product2(Name = 'Test', IsActive = true);
 		public Product2Builder withName(String Name){
@@ -281,9 +265,7 @@ public class testDataBuilder{
 	public static Product2Builder aProduct2(){
 		return new Product2Builder();
 	}
-	/**
-	 * @description Order Builder
-	*/
+
 	public class OrderBuilder{
 		Order order = new Order(Name = 'Test', EffectiveDate = Date.today(), Status = 'Draft');
 		public OrderBuilder withAccount(Account acc){
@@ -317,9 +299,7 @@ public class testDataBuilder{
 	public static orderBuilder aOrder(){
 		return new OrderBuilder();
 	}
-	/**
-	 * @description Order Builder
-	*/
+
 	public class OrderItemBuilder{
 		OrderItem OrdersItem = new OrderItem(Quantity = 1, UnitPrice = 1);
 		public OrderItemBuilder withOrder(Order order){
@@ -345,4 +325,12 @@ public class testDataBuilder{
 	public static OrderItemBuilder aOrderItem(){
 		return new OrderItemBuilder();
 	}
+
+    public static List<PricebookEntry> getPbEntriesByPbName(String pbName){
+		return [SELECT Product2.Name, UnitPrice FROM PricebookEntry WHERE Pricebook2.Name =: pbName LIMIT 5];
+	}
+	public static Order returnOrder(String orderName){
+		return [SELECT id, Status FROM Order WHERE Name =: orderName LIMIT 1];
+	}
+
 }

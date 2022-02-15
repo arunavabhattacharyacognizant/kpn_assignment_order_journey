@@ -1,6 +1,6 @@
 import { LightningElement, wire, api, track } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
-import KPN_ORDERS_ACTIVATION_ERROR from '@salesforce/label/c.KPN_ORDERS_ACTIVATION_ERROR';
+import ERROR_SUBMIT_ORDER from '@salesforce/label/c.ERROR_SUBMIT_ORDER';
 import getOrderItems from '@salesforce/apex/OrderProductsController.getOrderItems';
 import activateOrder from '@salesforce/apex/OrderProductsController.activateOrder';
 /** To listen the event orderItemsAddedEvent from the availableProducts component */
@@ -32,7 +32,7 @@ const columns = [
 export default class OrderProducts extends LightningElement {
 	/** Custom Labels */
 		labels = {
-			KPN_ORDERS_ACTIVATION_ERROR
+			ERROR_SUBMIT_ORDER
 		}
 	/** View controller attributes */
 		orderStatus = 'Draft';
@@ -112,7 +112,7 @@ export default class OrderProducts extends LightningElement {
 						}
 					}).catch(error => {
 						console.log(error);
-						this.sendMessageToUser('error', this.labels.KPN_ORDERS_ACTIVATION_ERROR);
+						this.sendMessageToUser('error', this.labels.ERROR_SUBMIT_ORDER);
 						this.activatingOrder = false;
 					});
 		}

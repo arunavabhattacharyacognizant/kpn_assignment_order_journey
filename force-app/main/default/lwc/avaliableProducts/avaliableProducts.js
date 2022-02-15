@@ -1,14 +1,22 @@
-import { LightningElement, api, wire, track } from 'lwc';
-import { ShowToastEvent } from 'lightning/platformShowToastEvent';
-import KPN_ORDERS_SELECT_ONE_PRODUCT from '@salesforce/label/c.KPN_ORDERS_SELECT_ONE_PRODUCT';
-import getAvailableProducts from '@salesforce/apex/ProductController.getProducts';
-import addProductsToOrder from '@salesforce/apex/ProductController.addToOrder';
-import { getRecord } from 'lightning/uiRecordApi';
-/** To send the event accross de page */
-import { publish, MessageContext } from 'lightning/messageService';
-import orderItemsAddedEvent from '@salesforce/messageChannel/orderItemsAddedEvent__c';
+/**
+ * @description       : js controller for "Available Products" lwc
+ * @author            : Arunava(Cognizant)
+ * 
+ * Modifications Log
+ * Ver   Date         Author                Modification
+ * 1.0   02-14-2022   Arunava(Cognizant)   Initial Version
+ **/
 
-const columns = [
+ import { LightningElement, api, wire, track } from 'lwc';
+ import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+ import ERROR_PRODUCT_ADDITION_MIN_REQ from '@salesforce/label/c.ERROR_PRODUCT_ADDITION_MIN_REQ';
+ import getProducts from '@salesforce/apex/ProductController.getProducts';
+ import addToOrder from '@salesforce/apex/ProductController.addToOrder';
+ import { getRecord } from 'lightning/uiRecordApi';
+ import { publish, MessageContext } from 'lightning/messageService';
+ import orderItemsAddedEvent from '@salesforce/messageChannel/orderItemsAddedEvent__c';
+ 
+ const columns = [
 	{
 		label: 'Name',
 		fieldName: 'Link',
@@ -31,7 +39,7 @@ const columns = [
 export default class AvailableProductsController extends LightningElement {
 	/** Custom Labels */
 		labels = {
-			KPN_ORDERS_SELECT_ONE_PRODUCT
+			ERROR_PRODUCT_ADDITION_MIN_REQ
 		}
 	/** View controller attributes */
 		orderStatus = 'Draft';
@@ -61,7 +69,7 @@ export default class AvailableProductsController extends LightningElement {
 			}
 		}
 	/** to get the product entries associated to the order */
-		@wire(getAvailableProducts, {OrderId : '$recordId'})
+		@wire(getProducts, {OrderId : '$recordId'})
 		wiredProject({error, data}){
 			if (data) {
 				if(data.length > 0){
@@ -133,7 +141,7 @@ export default class AvailableProductsController extends LightningElement {
 			let selectedProducts = this.selectedRows;
 			let pbList = [];
 			if(selectedProducts.length == 0){
-				this.sendMessageToUser('warning', this.labels.KPN_ORDERS_SELECT_ONE_PRODUCT);
+				this.sendMessageToUser('warning', this.labels.ERROR_PRODUCT_ADDITION_MIN_REQ);
 			}else{
 				selectedProducts.forEach(selectedProduct => {
 					let pbEntryToAdd = { 'sobjectType': 'PricebookEntry' };
@@ -141,7 +149,7 @@ export default class AvailableProductsController extends LightningElement {
 					pbEntryToAdd.UnitPrice = selectedProduct.UnitPrice;
 					pbList.push(pbEntryToAdd);
 				});
-				addProductsToOrder({pbList: pbList, OrderId: OrderId})
+				addToOrder({pbList: pbList, OrderId: OrderId})
 					.then(result => {
 						this.sendMessageToUser(result.status, result.message);
 						publish(this.messageContext, orderItemsAddedEvent);

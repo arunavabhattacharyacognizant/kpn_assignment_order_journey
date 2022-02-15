@@ -11,32 +11,20 @@
 	<lightning-card icon-name="standard:product" title="Available Products">
 		<div slot="actions">
 			<div slot="footer">
-				<lightning-button
-					disabled={hideCheckboxColums}
-					label="Add to Order"
-					icon-name="utility:add"
-					title="Add to Order"
-					onclick={addProducts}
-					class="slds-m-left_x-small">
+				<lightning-button disabled={hideCheckboxColums} label="Add to Order" icon-name="utility:add"
+					title="Add to Order" onclick={addProducts} class="slds-m-left_x-small">
 				</lightning-button>
 			</div>
 		</div>
-		<div class="table-container">
-			<lightning-datatable
-				key-field="Id"
-				enable-infinite-loading="true"
-				load-more-offset={initialOffset}
-				onloadmore={loadMoreProducts}
-				show-row-number-column
-				hide-checkbox-column={hideCheckboxColums}
-				columns={columns}
-				data={initialData}
-				onrowselection={defineSelectedProducts}
-				default-sort-direction={defaultSortDirection}
-				sorted-direction={sortDirection}
-				sorted-by={sortedBy}
-				onsort={sortTable}>
-			</lightning-datatable>
-		</div>
+		<template if:true={areDetailsVisible}>
+			<div class="table-container">
+				<lightning-datatable key-field="Id" enable-infinite-loading="true" load-more-offset={initialOffset}
+					onloadmore={loadMoreProducts} show-row-number-column hide-checkbox-column={hideCheckboxColums}
+					columns={columns} data={initialData} onrowselection={defineSelectedProducts}
+					default-sort-direction={defaultSortDirection} sorted-direction={sortDirection} sorted-by={sortedBy}
+					onsort={sortTable}>
+				</lightning-datatable>
+			</div>
+		</template>
 	</lightning-card>
 </template>
