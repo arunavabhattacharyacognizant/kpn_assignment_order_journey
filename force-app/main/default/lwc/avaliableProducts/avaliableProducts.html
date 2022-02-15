@@ -1,3 +1,12 @@
+<!--
+ * @description       : Controller class for "Available Products" lwc
+ * @author            : Arunava(Cognizant)
+ * 
+ * Modifications Log
+ * Ver   Date         Author                Modification
+ * 1.0   02-10-2022   Arunava(Cognizant)   Initial Version
+-->
+
 <template>
 	<lightning-card icon-name="standard:product" title="Available Products">
 		<div slot="actions">
@@ -12,24 +21,22 @@
 				</lightning-button>
 			</div>
 		</div>
-		<template if:true={areDetailsVisible}>
-			<div class="table-container">
-				<lightning-datatable
-					key-field="Id"
-					enable-infinite-loading="true"
-					load-more-offset={initialOffset}
-					onloadmore={loadMoreProducts}
-					show-row-number-column
-					hide-checkbox-column={hideCheckboxColums}
-					columns={columns}
-					data={initialData}
-					onrowselection={defineSelectedProducts}
-					default-sort-direction={defaultSortDirection}
-					sorted-direction={sortDirection}
-					sorted-by={sortedBy}
-					onsort={sortTable}>
-				</lightning-datatable>
-			</div>
-		</template>
+		<div class="table-container">
+			<lightning-datatable
+				key-field="Id"
+				enable-infinite-loading="true"
+				load-more-offset={initialOffset}
+				onloadmore={loadMoreProducts}
+				show-row-number-column
+				hide-checkbox-column={hideCheckboxColums}
+				columns={columns}
+				data={initialData}
+				onrowselection={defineSelectedProducts}
+				default-sort-direction={defaultSortDirection}
+				sorted-direction={sortDirection}
+				sorted-by={sortedBy}
+				onsort={sortTable}>
+			</lightning-datatable>
+		</div>
 	</lightning-card>
 </template>

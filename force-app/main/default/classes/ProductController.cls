@@ -39,31 +39,29 @@ public with sharing class ProductController {
     }
 
     @AuraEnabled
-    public static void addToOrder(List < PricebookEntry > pricebookEntries, Id OrderId) {
+    public static void addToOrder(List < PricebookEntry > pbList, Id OrderId) {
         try {
-            List < OrderItem > newOrderItems = new List < OrderItem > ();
-            List < OrderItem > existingOrderItems = getOrderItems(OrderId);
-            Map < Id, OrderItem > pricebookEntriesByOrderItem = new Map < Id, OrderItem > ();
-            for (OrderItem existingOrderItem: existingOrderItems) {
-                pricebookEntriesByOrderItem.put(existingOrderItem.PricebookEntryId, existingOrderItem);
-            }
-            if (pricebookEntries.size() > 0) {
-                for (PricebookEntry pricebookEntry: pricebookEntries) {
-                    OrderItem orderItem = new OrderItem();
-                    orderItem.OrderId = OrderId;
-                    orderItem.PricebookEntryId = pricebookEntry.Id;
-                    orderItem.UnitPrice = pricebookEntry.UnitPrice;
-
-                    if (pricebookEntriesByOrderItem.keySet().contains(pricebookEntry.Id)) {
-                        orderItem.Quantity = pricebookEntriesByOrderItem.get(pricebookEntry.Id).Quantity++;
-                        orderItem.Id = pricebookEntriesByOrderItem.get(pricebookEntry.Id).Id;
-                    } else {
-                        orderItem.Quantity = 1;
-                    }
-                    newOrderItems.add(orderItem);
-                }
-                Database.upsert(newOrderItems);
-            }
+            List<OrderItem> orderItemsToUpsert = new List<OrderItem>();
+			List<OrderItem>	OrderItems = getOrderItems(OrderId);
+			Map<Id, OrderItem> orderItemsBypBEntriesIds = new Map<Id, OrderItem>();
+			for(OrderItem orderItem : OrderItems){
+				orderItemsBypBEntriesIds.put(orderItem.PricebookEntryId, orderItem);
+			}
+			if(pbList.size() > 0){
+				for(PricebookEntry pbEntry : pbList){
+					OrderItem orderItem= new OrderItem();
+					orderItem.OrderId = OrderId;
+					orderItem.PricebookEntryId = pbEntry.Id;
+					orderItem.UnitPrice = pbEntry.UnitPrice;
+					orderItem.Quantity = 1;
+					if(orderItemsBypBEntriesIds.keySet().contains(pbEntry.Id)){
+						orderItem.Quantity = 1 + orderItemsBypBEntriesIds.get(pbEntry.Id).Quantity;
+						orderItem.Id = orderItemsBypBEntriesIds.get(pbEntry.Id).Id;
+					}
+					orderItemsToUpsert.add(orderItem);
+				}
+				Database.upsert(orderItemsToUpsert);
+			}
         } catch (Exception e) {
             throw new AuraHandledException(e.getMessage());
         }

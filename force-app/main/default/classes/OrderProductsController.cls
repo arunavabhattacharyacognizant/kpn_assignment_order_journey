@@ -1,5 +1,5 @@
 /**
- * @description       : Controller for "Available Products" lwc
+ * @description       : Controller for "Order Products" lwc
  * @author            : Arunava(Cognizant)
  * 
  * Modifications Log
@@ -30,8 +30,6 @@ public with sharing class OrderProductsController {
             submitOrderJson.writeEndArray();
             submitOrderJson.writeEndObject();
             String submitOrderRequestBody = submitOrderJson.getAsString();
-
-
             HttpRequest submitOrderRequest = new HttpRequest();
             submitOrderRequest.setEndpoint('https://submitorder.requestcatcher.com/test');
             submitOrderRequest.setMethod('POST');
@@ -48,7 +46,8 @@ public with sharing class OrderProductsController {
     }
 
     @AuraEnabled
-    public static String activateOrder(Id OrderId) {
+    public static LWCResponse activateOrder(Id OrderId) {
+        LWCResponse uiResponse = new LWCResponse();
         try {
             Order order = [SELECT Status, Account.AccountNumber, OrderNumber, Type, TotalAmount FROM Order WHERE Id =: OrderId WITH SECURITY_ENFORCED];
             List < OrderItem > orderItems = [SELECT Product2.Name, Quantity, UnitPrice, TotalPrice, OrderItemNumber FROM OrderItem WHERE OrderId =: OrderId WITH SECURITY_ENFORCED];
@@ -60,12 +59,25 @@ public with sharing class OrderProductsController {
                     orderItem.Status__c = 'Activated';
                 }
                 update orderItems;
-                return 'Order sucessfully submitted and activated';
+                uiResponse.status = 'SUCCESS';
+                uiResponse.message = System.Label.SUCCESS_SUBMIT_ORDER;                
             } else {
-                return 'Order submission and activation failed';
+                uiResponse.status = 'ERROR';
+                uiResponse.message = System.Label.ERROR_SUBMIT_ORDER;
             }
         } catch (Exception e) {
-            throw new AuraHandledException(e.getMessage());
+            uiResponse.status = 'ERROR';
+            uiResponse.message = e.getMessage();
         }
+        return uiResponse;
     }
+
+    @AuraEnabled
+	public static List<OrderItem> getOrderItems(Id OrderId){
+		try {
+			return [SELECT Product2.Name, Quantity, UnitPrice, TotalPrice FROM OrderItem WHERE OrderId =: OrderId WITH SECURITY_ENFORCED];
+		} catch (Exception e) {
+			throw new AuraHandledException(e.getMessage());
+		}
+	}
 }

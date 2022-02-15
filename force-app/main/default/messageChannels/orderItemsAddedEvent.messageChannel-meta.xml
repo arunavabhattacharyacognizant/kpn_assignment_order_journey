@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<LightningMessageChannel xmlns="http://soap.sforce.com/2006/04/metadata">
+    <masterLabel>OrderItemAddedEvent</masterLabel>
+    <isExposed>true</isExposed>
+    <description>Send a Event to notify that Order Items has been upserted</description>
+</LightningMessageChannel>
