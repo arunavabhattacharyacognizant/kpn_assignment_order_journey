@@ -14,18 +14,18 @@ public with sharing class OrderProductsController {
       try {
           JSONGenerator submitOrderJson = JSON.createGenerator(true);
           submitOrderJson.writeStartObject();
-          submitOrderJson.writeStringField('OrderNumber', order.OrderNumber);
-          submitOrderJson.writeStringField('AccountNumber', order.Account.AccountNumber);
-          submitOrderJson.writeStringField('Status', order.Status);
-          submitOrderJson.writeNumberField('TotalAmount', order.TotalAmount);
-          submitOrderJson.writeFieldName('OrderProducts');
+          submitOrderJson.writeStringField('accountNumber', order.Account.AccountNumber);
+          submitOrderJson.writeStringField('orderNumber', order.OrderNumber);  
+          submitOrderJson.writeStringField('type', order.Type);      
+          submitOrderJson.writeStringField('status', order.Status);
+          submitOrderJson.writeFieldName('orderProducts');
           submitOrderJson.writeStartArray();
           for (OrderItem orderItem: orderItems) {
               submitOrderJson.writeStartObject();
-              submitOrderJson.writeStringField('Name', orderItem.Product2.Name);
-              submitOrderJson.writeNumberField('UnitPrice', orderItem.UnitPrice);
-              submitOrderJson.writeNumberField('Quantity', Integer.valueOf(orderItem.Quantity));
-              submitOrderJson.writeNumberField('TotalPrice', orderItem.TotalPrice);
+              submitOrderJson.writeStringField('name', orderItem.Product2.Name);
+              submitOrderJson.writeStringField('code', orderItem.Product2.ProductCode);
+              submitOrderJson.writeNumberField('unitPrice', orderItem.UnitPrice);
+              submitOrderJson.writeNumberField('quantity', Integer.valueOf(orderItem.Quantity));          
               submitOrderJson.writeEndObject();
           }
           submitOrderJson.writeEndArray();
@@ -48,8 +48,8 @@ public with sharing class OrderProductsController {
   public static LWCResponse activateOrder(Id OrderId) {
       LWCResponse uiResponse = new LWCResponse();
       try {
-          Order order = [SELECT Status, Account.AccountNumber, OrderNumber, TotalAmount FROM Order WHERE Id =: OrderId WITH SECURITY_ENFORCED];
-          List < OrderItem > orderItems = [SELECT Product2.Name, Quantity, UnitPrice, TotalPrice, OrderItemNumber FROM OrderItem WHERE OrderId =: OrderId WITH SECURITY_ENFORCED];
+          Order order = [SELECT Status, Account.AccountNumber, OrderNumber, Type, TotalAmount FROM Order WHERE Id =: OrderId WITH SECURITY_ENFORCED];
+          List < OrderItem > orderItems = [SELECT Product2.Name, Product2.ProductCode, Quantity, UnitPrice, TotalPrice, OrderItemNumber FROM OrderItem WHERE OrderId =: OrderId WITH SECURITY_ENFORCED];
           Integer submitOrderResponseCode = submitOrder(order, orderItems);
           if (submitOrderResponseCode == 200) {
               order.Status = 'Activated';
