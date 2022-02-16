@@ -14,8 +14,20 @@ and offcourse a lot of patience while debugging the codes. believe me its not ea
 https://developer.salesforce.com/docs/component-library/overview/components
 Open source libraries like awsome salesforce , FFLib Apex Common etc
 
+## Additional setup
+1. Order should be created with default standard pricebook
+2. Products to be added with the pricebook
+3. Remote settings to be added for requestcather
+4. Custom label to be added for different messages
+5. Enabled order type field as its inactivated in OOB
+
 
 ## Screenshot for testing the project
+
+A demo can be viewed here https://github.com/arunavabhattacharyacognizant/kpn_assignment_order_journey/blob/master/KPN%20Assignment%20Demo-20220216_081804-Meeting%20Recording.mp4
+
+
+Below are the test results.
 
 <img width="952" alt="image" src="https://user-images.githubusercontent.com/99046277/154148568-00f6e8af-8723-452a-bf8c-d06be63c6d35.png">
 <img width="956" alt="image" src="https://user-images.githubusercontent.com/99046277/154148597-ed07014d-00a3-4466-a282-795c20902f23.png">
